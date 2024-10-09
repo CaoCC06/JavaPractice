@@ -6,7 +6,7 @@ import java.util.Random;
 import javax.imageio.ImageIO;
 
 //所有飞行物的父类
-public class FlyingObject {
+public abstract class FlyingObject {
 //	定义飞行物状态，三种状态：活着，死亡，移除
 	public static final int LIFE = 0;	//活着
 	public static final int DEAD = 1;	//死亡
@@ -58,4 +58,5 @@ public class FlyingObject {
 		}
 	}
 	
+	public abstract void step();
 }
