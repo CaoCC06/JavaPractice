@@ -10,29 +10,38 @@ public class BigEnemyPlane extends FlyingObject implements Score{
 	int index = 1;
 
 	public BigEnemyPlane() {
-		super(333, 369);
+		super(333, 333);
 		step = 3;
-		life = 6;
+		life = 8;
 	}
 	
 	static {
-		bufferedImage = new BufferedImage[2];
+		BufferedImage bomb = readImage("./imgs/blast_be.png");
+		bufferedImage = new BufferedImage[7];
 		bufferedImage[0] = readImage("./imgs/boss0_0.png");
-		bufferedImage[1] = readImage("./imgs/boss0_3.png");
+		bufferedImage[1] = readImage("./imgs/boss0_1.png");
+		bufferedImage[2] = bomb.getSubimage(0, 0, 339, 333);
+		bufferedImage[3] = bomb.getSubimage(339, 0, 339, 333);
+		bufferedImage[4] = bomb.getSubimage(678, 0, 339, 333);
+		bufferedImage[5] = bomb.getSubimage(1017, 0, 339, 333);
+		bufferedImage[6] = bomb.getSubimage(1356, 0, 339, 333);
 	}
 	
 //	获取图片
 	public BufferedImage getImage() {
 		BufferedImage img = null;
 		if (state == LIFE) {
-			return bufferedImage[0];
+			if (life >= 5) {
+				img = bufferedImage[0];
+			}else if (life < 5) {
+				img = bufferedImage[1];
+			}
 		}else if(isDead()) {
-//			img = bufferedImage[index];//获取爆炸图
-//			index++;//准备下一张图片
-//			if(index==8) {//如果是最后一张图片
-//				state = REMOVE;//移除，使其消失
-//			}
-			state = REMOVE;
+			img = bufferedImage[index];//获取爆炸图
+			index++;//准备下一张图片
+			if(index==7) {//如果是最后一张图片
+				state = REMOVE;//移除，使其消失
+			}
 		}
 		return img;
 	}
