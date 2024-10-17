@@ -10,7 +10,7 @@ public class BigEnemyPlane extends FlyingObject implements Score{
 	int index = 1;
 
 	public BigEnemyPlane() {
-		super(333, 333);
+		super(200, 200);
 		step = 3;
 		life = 8;
 	}

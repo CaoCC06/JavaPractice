@@ -12,29 +12,52 @@ public class Hero extends FlyingObject{
 	int step = 6;
 	boolean present = true;
 	int direction = 0;
-	private static BufferedImage bufferedImage;
-	private static BufferedImage bufferedImage1;
+	private static BufferedImage[] bufferedImage;
+	private static BufferedImage[] bufferedImage1;
+	private static BufferedImage[] bufferedImage2;
+	private static BufferedImage[] heroImage;
 	private static BufferedImage[] image;
 	
-	public Hero() {
+	public Hero(int heroType) {
 //		x轴是400的一般再减去角色的一半
 		super(170, 500, 56, 85);
 		newX = x;
 		newY = World.HEIGHT;
 		life = 3;
-//		newY = y;
+
+		image = new BufferedImage[6];
+		switch (heroType) {
+		case 0:
+			heroImage = bufferedImage;
+			break;
+		case 1:
+			heroImage = bufferedImage1;
+			break;
+		case 2:
+			heroImage = bufferedImage2;
+			break;
+		}
+		image[0] = heroImage[0].getSubimage(0, 0, 56, 85);
+		image[1] = heroImage[0].getSubimage(57, 0, 56, 85);
+		image[2] = heroImage[0].getSubimage(115, 0, 56, 85);
+		image[3] = heroImage[0].getSubimage(168, 0, 56, 85);
+		image[4] = heroImage[1].getSubimage(0, 0, 54, 85);
+		image[5] = heroImage[1].getSubimage(56, 0, 54, 85);
 	}
 	
 	static {
-		bufferedImage = readImage("./imgs/plane2.png");
-		bufferedImage1 = readImage("./imgs/plane2a.png");
-		image = new BufferedImage[6];
-		image[0] = bufferedImage.getSubimage(0, 0, 56, 85);
-		image[1] = bufferedImage.getSubimage(57, 0, 56, 85);
-		image[2] = bufferedImage.getSubimage(115, 0, 56, 85);
-		image[3] = bufferedImage.getSubimage(168, 0, 56, 85);
-		image[4] = bufferedImage1.getSubimage(0, 0, 54, 85);
-		image[5] = bufferedImage1.getSubimage(56, 0, 54, 85);
+		//一号机
+		bufferedImage = new BufferedImage[2];
+		bufferedImage[0] = readImage("./imgs/plane1.png");
+		bufferedImage[1] = readImage("./imgs/plane1a.png");
+		//二号机
+		bufferedImage1 = new BufferedImage[2];
+		bufferedImage1[0] = readImage("./imgs/plane2.png");
+		bufferedImage1[1] = readImage("./imgs/plane2a.png");
+		//二号机
+		bufferedImage2 = new BufferedImage[2];
+		bufferedImage2[0] = readImage("./imgs/plane3.png");
+		bufferedImage2[1] = readImage("./imgs/plane3a.png");
 	}
 
 	@Override
@@ -81,38 +104,35 @@ public class Hero extends FlyingObject{
 	}
 	
 //	发射子弹
-	public Bullet[] shoot(int fire) {
+	public Bullet[] shoot(int fire,int bulletType) {
 		Bullet[] bullets = null;
-//		获取1/4宽度
+		//获取1/4宽度
 		int w = this.width/4 - 6;
-//		获取1/3宽度
+		//获取1/3宽度
 		int w1 = this.width/3 - 9;
-//		单子弹
-//		bullets = new Bullet[1];
-//		bullets[0] = new Bullet(this.newX+2*w,this.y-20);
 		if (fire == 30) {
 			//单子弹
 			bullets = new Bullet[1];
-			bullets[0] = new Bullet(this.newX+2*w,this.newY-20);
+			bullets[0] = new Bullet(this.newX+2*w,this.newY-20,bulletType);
 		}else if(fire == 20) {
 			//双子弹
 			bullets = new Bullet[2];
-			bullets[0] = new Bullet(this.newX+1*w,this.newY-20);
-			bullets[1] = new Bullet(this.newX+3*w,this.newY-20);
+			bullets[0] = new Bullet(this.newX+1*w,this.newY-20,bulletType);
+			bullets[1] = new Bullet(this.newX+3*w,this.newY-20,bulletType);
 		}else if(fire == 10) {
 			//三子弹
 			bullets = new Bullet[3];
-			bullets[0] = new Bullet(this.newX+1*w1,this.newY-20);
-			bullets[1] = new Bullet(this.newX+2*w1,this.newY-20);
-			bullets[2] = new Bullet(this.newX+3*w1,this.newY-20);
+			bullets[0] = new Bullet(this.newX+1*w1,this.newY-20,bulletType);
+			bullets[1] = new Bullet(this.newX+2*w1,this.newY-20,bulletType);
+			bullets[2] = new Bullet(this.newX+3*w1,this.newY-20,bulletType);
 		}
 		else if(fire == 5) {
 			//极限火力
 			bullets = new Bullet[4];
-			bullets[0] = new Bullet(this.newX+1*w,this.newY-20);
-			bullets[1] = new Bullet(this.newX+2*w,this.newY-20);
-			bullets[2] = new Bullet(this.newX+3*w,this.newY-20);
-			bullets[3] = new Bullet(this.newX+4*w,this.newY-20);
+			bullets[0] = new Bullet(this.newX+1*w,this.newY-20,bulletType);
+			bullets[1] = new Bullet(this.newX+2*w,this.newY-20,bulletType);
+			bullets[2] = new Bullet(this.newX+3*w,this.newY-20,bulletType);
+			bullets[3] = new Bullet(this.newX+4*w,this.newY-20,bulletType);
 		}
 		return bullets;
 	}

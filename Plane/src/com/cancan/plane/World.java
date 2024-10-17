@@ -26,17 +26,23 @@ public class World extends JPanel implements KeyListener{
 	
 //	游戏状态
 	public static final int START = 0;	//开始
-	public static final int	RUNNING =1;	//进行
-	public static final int	PAUSE = 2;	//暂停
-	public static final int	GAME_OVER = 3;	//结束
+	public static final int READY = 1;	//准备
+	public static final int	RUNNING =2;	//进行
+	public static final int	PAUSE = 3;	//暂停
+	public static final int	GAME_OVER = 4;	//结束
 	
 //	游戏状态图片
 	private static BufferedImage[] startImage;
+	private static BufferedImage[] readyImages;
+	private static BufferedImage[] runningImages;
 	private static BufferedImage[] pauseImage;
 	private static BufferedImage[] overImage;
 	
 	int newFire = 0;
 	int score = 0;
+	int indexLogo = 0;
+	int chooseHero = 0;
+	int chooseFire = 0;
 	
 	//定义游戏的当前状态
 	private int state = START;
@@ -44,16 +50,38 @@ public class World extends JPanel implements KeyListener{
 //	加载图片
 	static {
 		//加载开始前图片
-		startImage = new BufferedImage[4];
-		startImage[0] = readImage("./imgs/back_of_about.jpg");
-		startImage[1] = readImage("./imgs/main_Btn_pressed8.png");
-		startImage[2] = readImage("./imgs/main_logo.png");
-		startImage[3] = readImage("./imgs/main_plane_0.png");
+		startImage = new BufferedImage[5];
+		startImage[2] = readImage("./imgs/back_of_about.jpg");
+		startImage[3] = readImage("./imgs/main_Btn_pressed8.png");
+		startImage[4] = readImage("./imgs/main_logo.png");
+		startImage[0] = readImage("./imgs/main_plane_0.png");
+		startImage[1] = readImage("./imgs/main_plane_1.png");
+		//加载准备阶段图片
+		readyImages = new  BufferedImage[11];
+		readyImages[0] = readImage("./imgs/main_bgDown.jpg");
+		readyImages[1] = readImage("./imgs/qia_tishikuang.png");
+		readyImages[2] = readImage("./imgs/qia_plane_sel.png");
+		readyImages[3] = readImage("./imgs/qia_plane1.png");
+		readyImages[4] = readImage("./imgs/qia_plane2.png");
+		readyImages[5] = readImage("./imgs/qia_plane3.png");
+		readyImages[6] = readImage("./imgs/bomb1_1.png");
+		readyImages[7] = readImage("./imgs/bomb2_1.png");
+		readyImages[8] = readImage("./imgs/bomb3_1.png");
+		readyImages[9] = readImage("./imgs/zb_intro_Btn_nor1.png");
+		readyImages[10] = readImage("./imgs/zb_sum_btn_nor0.png");
+		//加载进行时的图片
+		runningImages = new BufferedImage[5];
+		runningImages[0] = readImage("./imgs/uiimg2.png");
+		//加载暂停图片
+		pauseImage = new BufferedImage[4];
+		pauseImage[0] = readImage("./imgs/fh_backImg.png");
+		pauseImage[1] = readImage("./imgs/fh_btn2.png");
+		pauseImage[2] = readImage("./imgs/fh_btn1.png");
 	}
 	
 	Sky sky = new Sky();
 	Road road = new Road();
-	Hero hero = new Hero();
+	Hero hero;
 	FlyingObject[] bullets = new Bullet[] {};
 	FlyingObject[] enemys = new FlyingObject[] {};
 	FlyingObject[] rewards = new FlyingObject[] {};
@@ -63,17 +91,56 @@ public class World extends JPanel implements KeyListener{
 		switch (state) {
 		case START:
 			//绘制开始界面
-			g.drawImage(startImage[0], -21, -10, null);
-			g.drawImage(startImage[1], 100, 400, null);
-			g.drawImage(startImage[3], -10, 50, null);
-			g.drawImage(startImage[2], -25, 0, null);
+			g.drawImage(startImage[2], -21, -10, null);
+			g.drawImage(startImage[3], 100, 400, null);
+			g.drawImage(startImage[indexLogo % 2], -10, 50, null);
+			g.drawImage(startImage[4], -25, 0, null);
+			indexLogo ++;
+			break;
+		case READY:
+			//绘制选角界面
+			g.drawImage(readyImages[0], -21, -10, null);
+			g.drawImage(readyImages[1], 0, 10, 380, 111, null);
+			g.drawImage(readyImages[1], 0, 131, 380, 111, null);
+			g.drawImage(readyImages[1], 0, 252, 380, 111, null);
+			g.drawImage(readyImages[1], 0, 373, 380, 111, null);
+			switch (chooseHero) {
+			case 0:
+				g.drawImage(readyImages[2], 8, 133, 74, 108,null);
+				break;
+			case 1:
+				g.drawImage(readyImages[2], 78, 133, 74, 108,null);
+				break;
+			case 2:
+				g.drawImage(readyImages[2], 148, 133, 74, 108,null);
+				break;
+			}
+			g.drawImage(readyImages[3], 10, 136, 70, 100, null);
+			g.drawImage(readyImages[4], 80, 136, 70, 100, null);
+			g.drawImage(readyImages[5], 150, 136, 70, 100, null);
+			switch (chooseFire) {
+			case 0:
+				g.drawImage(readyImages[2], 8, 254, 74, 108,null);
+				break;
+			case 1:
+				g.drawImage(readyImages[2], 78, 254, 74, 108,null);
+				break;
+			case 2:
+				g.drawImage(readyImages[2], 148, 254, 74, 108,null);
+				break;
+			}
+
+			g.drawImage(readyImages[6], 38, 257, 17, 100, null);
+			g.drawImage(readyImages[7], 108, 300, 17, 22, null);
+			g.drawImage(readyImages[8], 178, 257, 17, 100, null);
+			
+			g.drawImage(readyImages[9], 59, 520, null);
+			g.drawImage(readyImages[10], 200, 520, null);
 			break;
 		case RUNNING:
 		case PAUSE:
 			sky.paintObject(g);
-			if (road.state == 0) {
-				road.paintObject(g);
-			}
+			road.paintObject(g);
 			//绘制敌机
 			for(int i=0;i < enemys.length;i++) {
 				enemys[i].paintObject(g);
@@ -90,7 +157,13 @@ public class World extends JPanel implements KeyListener{
 			g.drawString("分数："+score, 10, 20);
 			g.drawString("生命："+hero.life, 10, 40);
 			g.drawString("分数："+newFire, 10, 20);
+			g.drawImage(runningImages[0], 334, -5, null);
 			//绘制暂停界面
+			if (state == PAUSE) {
+				g.drawImage(pauseImage[0], 40, 210, 300, 156 , null);
+				g.drawImage(pauseImage[1], 50, 330, null);
+				g.drawImage(pauseImage[2], 191, 330, null);
+			}
 			break;
 		case GAME_OVER:
 			//绘制开始界面
@@ -104,9 +177,64 @@ public class World extends JPanel implements KeyListener{
 		MouseAdapter l = new MouseAdapter() {
 			//鼠标的点击操作
 			public void mouseClicked(MouseEvent e) {
+				//获取鼠标的x轴和y轴的坐标
+				int x = e.getX();
+				int y = e.getY();
 				//点击鼠标之后切换到运行态
-				if (state == START) {
-					state = RUNNING;
+				switch (state) {
+				case START:
+					if (isInBtn(x,y,100,400,190,190)) {
+						state = READY;
+					}
+					break;
+				case READY:
+					if (isInBtn(x,y,10,136,100,70)) {
+						chooseHero = 0;
+					}else if (isInBtn(x,y,80,136,100,70)) {
+						chooseHero = 1;
+					}else if (isInBtn(x,y,150,136,100,70)) {
+						chooseHero = 2;
+					}else if(isInBtn(x,y,8,254,108,74)){
+						chooseFire = 0;
+					}else if(isInBtn(x,y,78,254,108,74)){
+						chooseFire = 1;
+					}else if(isInBtn(x,y,148,254,108,74)){
+						chooseFire = 2;
+					}else if (isInBtn(x,y,59,520,60,141)) {
+						hero = new Hero(chooseHero);
+						state = RUNNING;
+					}else if (isInBtn(x,y,200,520,62,141)) {
+						state = START;
+					}
+					break;
+				case RUNNING:
+					if (isInBtn(x,y,334,-5,67,62)) {
+						state = PAUSE;
+					}
+					break;
+				case PAUSE:
+					if (isInBtn(x,y,50,330,141,60)) {
+						state = RUNNING;
+					}else if (isInBtn(x,y,191,330,141,60)) {
+						state = START;
+						//重置游戏参数
+						score = 0;
+						sky = new Sky();
+						road = new Road();
+						newFire = 0;
+						score = 0;
+						chooseHero = 0;
+						chooseFire = 0;
+						enemys = new FlyingObject[0];
+						bullets = new Bullet[0];
+						System.gc();
+					}
+					break;
+				case GAME_OVER:
+					
+					break;
+				default:
+					break;
 				}
 				//重置游戏参数
 //				score = 0;
@@ -173,7 +301,7 @@ public class World extends JPanel implements KeyListener{
 //	子弹入场(火力fire{5,10,20,30}越小强)
 	public void bulletEnterAction(int fire) {
 		if (bulletIndex % (fire + 10) == 0) {
-			Bullet[] bls = hero.shoot(fire);
+			Bullet[] bls = hero.shoot(fire, chooseFire);
 			//扩容
 			bullets = Arrays.copyOf(bullets, bullets.length + bls.length);
 			System.arraycopy(bls, 0, bullets, bullets.length - bls.length, bls.length);
@@ -373,40 +501,44 @@ public class World extends JPanel implements KeyListener{
 		frame.addKeyListener(w);
 		w.start();
 	}
-
-@Override
-public void keyTyped(KeyEvent e) {
-	// TODO Auto-generated method stub
 	
-}
-
-@Override
-public void keyPressed(KeyEvent e) {
-	if (state == RUNNING) {
-		if (e.getKeyCode() == KeyEvent.VK_DOWN) {
-			hero.moveTo(0, 6);
-		} else if (e.getKeyCode() == KeyEvent.VK_UP) {
-			hero.moveTo(0, -6);
-		} else if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
-			hero.moveTo(6, 0);
-		} else if (e.getKeyCode() == KeyEvent.VK_LEFT) {
-			hero.moveTo(-6, 0);
-		}
+//	自定义方法，判断是否在图片范围
+	public boolean isInBtn(int ex,int ey,int bx,int by,int bHeight, int bWidth) {
+		return ex > bx && ex < bx + bWidth && ey > by && ey < by + bHeight;
 	}
-	if(e.getKeyCode() == KeyEvent.VK_ESCAPE){
+
+	@Override
+	public void keyTyped(KeyEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+	
+	@Override
+	public void keyPressed(KeyEvent e) {
 		if (state == RUNNING) {
-			state = PAUSE;
-		}else if (state == PAUSE) {
-			state = RUNNING;
+			if (e.getKeyCode() == KeyEvent.VK_DOWN) {
+				hero.moveTo(0, 6);
+			} else if (e.getKeyCode() == KeyEvent.VK_UP) {
+				hero.moveTo(0, -6);
+			} else if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
+				hero.moveTo(6, 0);
+			} else if (e.getKeyCode() == KeyEvent.VK_LEFT) {
+				hero.moveTo(-6, 0);
+			}
+		}
+		if(e.getKeyCode() == KeyEvent.VK_ESCAPE){
+			if (state == RUNNING) {
+				state = PAUSE;
+			}else if (state == PAUSE) {
+				state = RUNNING;
+			}
 		}
 	}
-}
-
-@Override
-public void keyReleased(KeyEvent e) {
-	if (e.getKeyCode() == KeyEvent.VK_DOWN ||e.getKeyCode() == KeyEvent.VK_UP||e.getKeyCode() == KeyEvent.VK_RIGHT||e.getKeyCode() == KeyEvent.VK_LEFT) {
-		hero.moveTo(0, 0);
+	
+	@Override
+	public void keyReleased(KeyEvent e) {
+		if (e.getKeyCode() == KeyEvent.VK_DOWN ||e.getKeyCode() == KeyEvent.VK_UP||e.getKeyCode() == KeyEvent.VK_RIGHT||e.getKeyCode() == KeyEvent.VK_LEFT) {
+			hero.moveTo(0, 0);
+		}
 	}
-}
-
 }

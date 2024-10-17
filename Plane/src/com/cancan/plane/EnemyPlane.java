@@ -15,7 +15,7 @@ public class EnemyPlane extends FlyingObject implements Score{
 	int form;
 
 	public EnemyPlane() {
-		super(79, 79);
+		super(70, 70);
 		step = 4;
 		life = 1;
 		form = random.nextInt(3);

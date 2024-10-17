@@ -11,20 +11,35 @@ public class Bullet extends FlyingObject{
 	int index = 2;
 	int normalIndex = 1;
 
-	public Bullet(int x,int y) {
-		super(x, y, 26, 42);
+	public Bullet(int x,int y,int bulletType) {
+		super(x, y, 20, 20);
 		step = 7;
+		switch (bulletType) {
+		case 0:
+			bufferedImage[0] = readImage("./imgs/bomb1_1.png");
+			bufferedImage[1] = readImage("./imgs/bomb1_2.png");
+			bufferedImage[2] = readImage("./imgs/bomb1_3.png");
+			break;
+		case 1:
+			bufferedImage[0] = readImage("./imgs/bomb2_1.png");
+			bufferedImage[1] = readImage("./imgs/bomb2_2.png");
+			bufferedImage[2] = readImage("./imgs/bomb2_3.png");
+			break;
+		case 2:
+			bufferedImage[0] = readImage("./imgs/bomb3_1.png");
+			bufferedImage[1] = readImage("./imgs/bomb3_2.png");
+			bufferedImage[2] = readImage("./imgs/bomb3_3.png");
+			break;
+		}
 	}
 	
 	static {
 		BufferedImage bomb = readImage("./imgs/blast_b.png");
-		bufferedImage = new BufferedImage[6];
-		bufferedImage[0] = readImage("./imgs/assisent1_3.png");
-		bufferedImage[1] = readImage("./imgs/assisent1_4.png");
-		bufferedImage[2] = bomb.getSubimage(0, 0, 36, 36);
-		bufferedImage[3] = bomb.getSubimage(36, 0, 36, 36);
-		bufferedImage[4] = bomb.getSubimage(72, 0, 36, 36);
-		bufferedImage[5] = bomb.getSubimage(108, 0, 36, 36);
+		bufferedImage = new BufferedImage[7];
+		bufferedImage[3] = bomb.getSubimage(0, 0, 36, 36);
+		bufferedImage[4] = bomb.getSubimage(36, 0, 36, 36);
+		bufferedImage[5] = bomb.getSubimage(72, 0, 36, 36);
+		bufferedImage[6] = bomb.getSubimage(108, 0, 36, 36);
 	}
 	
 	public boolean isOutBounds() {
@@ -41,7 +56,7 @@ public class Bullet extends FlyingObject{
 		BufferedImage img = null;
 		if (state == LIFE) {
 			normalIndex++;
-			img = bufferedImage[normalIndex%2];
+			img = bufferedImage[normalIndex%3];
 		}else if(isDead()) {
 			img = bufferedImage[index];//获取爆炸图
 			index++;//准备下一张图片
